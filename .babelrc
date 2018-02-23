@@ -1,0 +1,27 @@
+{
+	"presets": [
+		"react",
+		[
+			"env",
+			{
+				"targets": {
+					"browsers": ["last 2 versions"]
+				}
+			}
+		],
+		"stage-0"
+	],
+	"plugins": [
+		"es6-promise",
+		"transform-object-rest-spread",
+		"syntax-decorators",
+		"transform-decorators-legacy",
+		"transform-async-to-generator",
+		"transform-react-constant-elements",
+		"babel-plugin-transform-react-inline-elements",
+		["transform-runtime", {
+			"polyfill": false,
+			"regenerator": true
+		}]
+	]
+}
