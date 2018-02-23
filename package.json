@@ -1,7 +1,7 @@
 {
-	"name": "d3-applications-react-starter",
+	"name": "yerbae-locations",
 	"version": "1.0.0",
-	"description": "ReactJS Starter Template",
+	"description": "Locations App For Yerbae",
 	"main": "index.js",
 	"scripts": {
 		"start": "node_modules/.bin/webpack-dev-server -d --colors --config webpack.config.js --watch",
