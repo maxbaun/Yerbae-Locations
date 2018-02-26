@@ -10,6 +10,8 @@ import {Map} from 'immutable';
 import {actions as locationActions, selectors as locationSelectors} from '../ducks/location';
 import {actions as storeActions, selectors as storeSelectors} from '../ducks/app';
 import {actions as dataActions, selectors as dataSelectors} from '../ducks/data';
+import {selectors as locationsSelectors} from '../ducks/locations';
+import {selectors as metaSelectors} from '../ducks/meta';
 
 import {unique} from '../utils/componentHelpers';
 
@@ -18,7 +20,9 @@ import '../css/styles.css';
 const mapStateToProps = state => ({
 	location: locationSelectors.getLocation(state),
 	status: storeSelectors.getStatus(state),
-	data: dataSelectors.getData(state)
+	data: dataSelectors.getData(state),
+	locations: locationsSelectors.getLocations(state),
+	meta: metaSelectors.getMeta(state)
 });
 
 const mapDispatchToProps = dispatch => ({

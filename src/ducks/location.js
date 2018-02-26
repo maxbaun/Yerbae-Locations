@@ -1,6 +1,7 @@
 import {LOCATION_CHANGE} from 'react-router-redux';
 import * as utils from '../utils/duckHelpers';
 import {fromJS} from 'immutable';
+import * as history from 'history';
 
 export const types = {
 	LOCATION_PUSH: 'LOCATION_PUSH',

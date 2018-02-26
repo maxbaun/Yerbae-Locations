@@ -4,6 +4,8 @@ import {fromJS, Map} from 'immutable';
 
 import * as utils from '../utils/duckHelpers';
 import data from './data';
+import locations from './locations';
+import meta from './meta';
 
 export const types = {
 	...utils.requestTypes('APP'),
@@ -73,7 +75,9 @@ function status(state = initialState, action) {
 
 export default combineReducers({
 	status,
-	data
+	data,
+	locations,
+	meta
 });
 
 const getStatus = state => state.getIn(['app', 'status']);

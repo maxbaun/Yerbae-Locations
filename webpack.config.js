@@ -116,7 +116,13 @@ let browserConfig = {
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: isDev ? JSON.stringify('development') : JSON.stringify('production')
-			}
+			},
+			FIREBASE_API_KEY: JSON.stringify((isDev ? 'AIzaSyD_k1bjJAQM7FFvuiS7SPgjQWQ4LhZAvrw' : '')),
+			FIREBASE_AUTH_DOMAIN: JSON.stringify((isDev ? 'yerbae-1510722307750.firebaseapp.com' : '')),
+			FIREBASE_DATABASE_URL: JSON.stringify((isDev ? 'https://yerbae-1510722307750.firebaseio.com' : '')),
+			FIREBASE_PROJECT_ID: JSON.stringify((isDev ? 'yerbae-1510722307750' : '')),
+			FIREBASE_STORAGE_BUCKET: JSON.stringify((isDev ? 'yerbae-1510722307750.appspot.com' : '')),
+			FIREBASE_MESSAGING_SENDER_ID: JSON.stringify((isDev ? '425317889074' : ''))
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',

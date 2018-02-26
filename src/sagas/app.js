@@ -1,7 +1,6 @@
 import {call, put, all, takeEvery} from 'redux-saga/effects';
 
 import {types as appTypes} from '../ducks/app';
-import api from '../services/api';
 import {sagaResponse, sagaRequest, sagaFailure} from '../utils/sagaHelpers';
 import {errorHandler} from '../utils/errorHelpers';
 
@@ -10,21 +9,15 @@ export function * watchApp() {
 }
 
 function * onRequest({payload, fetch, notification, tracking, redirect}) {
-	if (!Array.isArray(payload)) {
-		payload = [payload];
-	}
-
 	try {
 		// Run pre-request saga functions here
-		payload = yield all(payload.map(p => sagaRequest(p.dataset) ? call(sagaRequest(p.dataset), p) : p));
+		let response = yield call(sagaRequest(payload.dataset), {payload});
 
 		// Remove any empty/undefined payloads
-		payload = payload.filter(p => p);
-
-		let response = yield all(payload.map(p => call(api, p)));
+		// payload = payload.filter(p => p);
 
 		// Run the response saga functions hers
-		response = yield all(payload.map(p => call(sagaResponse(p.dataset, p.route), response, p)));
+		response = yield call(sagaResponse(payload.dataset), {response, payload});
 
 		return yield call(onSuccess, {response, fetch, notification, tracking, redirect});
 	} catch (error) {
@@ -54,7 +47,7 @@ export function * onFailure({payload, error, fetch}) {
 	});
 
 	// Run the response saga functions hers
-	yield all(payload.map(p => call(sagaFailure(p.dataset), error, p)));
+	yield all(sagaFailure(payload.dataset), {error, payload});
 
 	return yield error;
 }

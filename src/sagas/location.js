@@ -25,7 +25,9 @@ export function * onLocationQuery({query}) {
 	const pathname = location.get('pathname');
 
 	if (supportsHistory()) {
-		return yield call(push, {pathname, query});
+		const t = yield call(push, {pathname, query});
+
+		return yield put(t);
 	}
 
 	return yield call(legacyLocationChange, {pathname, query});
