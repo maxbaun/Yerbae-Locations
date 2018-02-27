@@ -1,39 +1,38 @@
-import {call, all, put} from 'redux-saga/effects';
-import firebase from 'firebase';
+import {eventChannel} from 'redux-saga';
+import {call, all, put, takeLatest, take, fork} from 'redux-saga/effects';
 import {List, fromJS} from 'immutable';
 import axios from 'axios';
 
 import {types as locationsTypes} from '../ducks/locations';
 import {types as metaTypes} from '../ducks/meta';
+import {ref} from '../services/firebase';
 
-/* eslint-disable */
-const firebaseConfig = {
-	apiKey: FIREBASE_API_KEY,
-	authDomain: FIREBASE_AUTH_DOMAIN,
-	databaseURL: FIREBASE_DATABASE_URL,
-	projectId: FIREBASE_PROJECT_ID,
-	storageBucket: FIREBASE_STORAGE_BUCKET,
-	messagingSenderId: FIREBASE_MESSAGING_SENDER_ID
-};
-/* eslint-enable */
-
-firebase.initializeApp(firebaseConfig);
+export function * watchLocations() {
+	yield takeLatest(locationsTypes.LOCATIONS_SAVE, onLocationsSave);
+	yield fork(watchChildAdded);
+}
 
 export function * LOCATIONS_REQUEST({payload}) {
-	if (!payload.data.limit) {
-		payload.data.limit = 20;
+	if (payload.action === 'get') {
+		if (!payload.data.limit) {
+			payload.data.limit = 20;
+		}
+
+		const data = yield call(getLocations, payload);
+
+		const meta = yield call(getTotalLocations, payload);
+
+		const response = {
+			data,
+			meta
+		};
+
+		return yield response;
 	}
 
-	const data = yield call(getLocations, payload);
-
-	const meta = yield call(getTotalLocations, payload);
-
-	const response = {
-		data,
-		meta
-	};
-
-	return yield response;
+	if (payload.action === 'save') {
+		return yield call(onLocationsSave, fromJS(payload));
+	}
 }
 
 export function * LOCATIONS_RESPONSE({response}) {
@@ -51,8 +50,47 @@ export function * LOCATIONS_RESPONSE({response}) {
 	return yield response;
 }
 
+export function * onLocationsSave({payload}) {
+	return yield call(updateLocation, fromJS(payload));
+}
+
+export function * watchChildAdded() {
+	const channel = yield call(locationsChannel, 'child_changed');
+
+	while (true) {
+		const location = yield take(channel);
+
+		yield put({
+			type: locationsTypes.LOCATIONS_UPDATE,
+			payload: transformItem(location)
+		});
+	}
+}
+
+function locationsChannel(evt) {
+	const listener = eventChannel(emit => {
+		ref().on(
+			evt,
+			location => emit(location)
+		);
+
+		return () => ref().off(listener);
+	});
+
+	return listener;
+}
+
+async function updateLocation(data) {
+	return ref(`/${data.get('key')}`)
+		.update({
+			...data
+				.delete('key')
+				.toJS()
+		});
+}
+
 async function getTotalLocations(payload) {
-	let locationRef = firebase.database().ref('/');
+	let locationRef = ref();
 
 	return axios
 		.get(`${locationRef.toString()}.json?shallow=true`)
@@ -97,7 +135,7 @@ async function getTotalLocations(payload) {
 }
 
 async function getLocations(payload) {
-	let locationRef = firebase.database().ref('/');
+	let locationRef = ref();
 
 	if (payload.data.orderBy) {
 		locationRef = locationRef.orderByChild(payload.data.orderBy);

@@ -18,7 +18,8 @@ class Home extends Component {
 		data: ImmutablePropTypes.map,
 		locations: ImmutablePropTypes.list,
 		meta: ImmutablePropTypes.map,
-		location: ImmutablePropTypes.map
+		location: ImmutablePropTypes.map,
+		user: ImmutablePropTypes.map
 	};
 
 	static defaultProps = {
@@ -26,7 +27,8 @@ class Home extends Component {
 		data: Map(),
 		locations: List(),
 		location: Map(),
-		meta: Map()
+		meta: Map(),
+		user: Map()
 	};
 
 	componentDidMount() {
@@ -45,9 +47,21 @@ class Home extends Component {
 		this.props.actions.appRequest({
 			payload: {
 				dataset: 'locations',
+				action: 'get',
 				data: {
 					startAt
 				}
+			},
+			fetch: this.fetch
+		});
+	}
+
+	@bind()
+	handleGetCoords(location) {
+		this.props.actions.appRequest({
+			payload: {
+				dataset: 'coordinates',
+				data: location
 			},
 			fetch: this.fetch
 		});
@@ -60,6 +74,17 @@ class Home extends Component {
 				startAt
 			}
 		});
+	}
+
+	@bind()
+	handleLogin() {
+		this.props.actions.authLogin();
+	}
+
+	@bind()
+	handleLocationSave(e) {
+		console.log(e.target.values);
+		e.preventDefault();
 	}
 
 	render() {
@@ -75,7 +100,12 @@ class Home extends Component {
 				{locations.map(location => {
 					return (
 						<div key={location.get('key')}>
-							{location.get('name') || 'no name'}
+							<form onSubmit={this.handleLocationSave}>
+								<input type="text" defaultValue={location.get('name')}/>
+								<strong>{location.get('lat')} / {location.get('lng')}</strong>
+								<button type="button" onClick={click(this.handleGetCoords, location)}>Get Coords</button>
+
+							</form>
 						</div>
 					);
 				})}

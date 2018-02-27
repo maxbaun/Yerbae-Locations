@@ -6,6 +6,7 @@ import * as utils from '../utils/duckHelpers';
 import data from './data';
 import locations from './locations';
 import meta from './meta';
+import user from './user';
 
 export const types = {
 	...utils.requestTypes('APP'),
@@ -77,7 +78,8 @@ export default combineReducers({
 	status,
 	data,
 	locations,
-	meta
+	meta,
+	user
 });
 
 const getStatus = state => state.getIn(['app', 'status']);

@@ -58,6 +58,7 @@
 		"webpack-dev-server": "^2.9.7"
 	},
 	"dependencies": {
+		"@google/maps": "^0.4.5",
 		"axios": "^0.17.1",
 		"firebase": "^4.10.1",
 		"history": "4.7.2",
