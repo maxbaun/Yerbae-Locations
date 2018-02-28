@@ -7,23 +7,46 @@ import {TableRow, TableRowColumn} from 'material-ui/Table';
 import {RaisedButton} from 'material-ui';
 import {Link} from 'react-router-dom';
 
-import {noop, coordinates} from '../utils/componentHelpers';
+import {noop, coordinates, isLoading, unique} from '../utils/componentHelpers';
 import CSS from '../css/modules/locationRow.css';
 
 export default class LocationRow extends Component {
+	constructor(props) {
+		super(props);
+
+		this.fetch = unique();
+	}
+
 	static propTypes = {
 		data: ImmutablePropTypes.map,
 		actions: PropTypes.objectOf(PropTypes.func),
-		children: PropTypes.array.isRequired
+		children: PropTypes.array.isRequired,
+		status: ImmutablePropTypes.map
 	}
 
 	static defaultProps = {
 		data: Map(),
+		status: Map(),
 		actions: {noop}
 	}
 
+	@bind()
+	handleDelete() {
+		this.props.actions.appRequest({
+			payload: {
+				dataset: 'locations',
+				action: 'delete',
+				data: {
+					id: this.props.data.get('_id')
+				}
+			},
+			fetch: this.fetch
+		});
+	}
+
 	render() {
-		const {data: location, ...rowProps} = this.props;
+		const {data: location, status, ...rowProps} = this.props;
+		const loading = isLoading(this.fetch, status);
 
 		return (
 			<TableRow {...rowProps}>
@@ -37,9 +60,12 @@ export default class LocationRow extends Component {
 					<span className={CSS.coordinates}>{coordinates(location)}</span>
 				</TableRowColumn>
 				<TableRowColumn>
-					<Link to={`/locations/${location.get('_id')}`}>
-						<RaisedButton secondary label="Edit"/>
-					</Link>
+					<div className={CSS.buttons}>
+						<Link to={`/locations/${location.get('_id')}`}>
+							<RaisedButton disabled={loading} label="Edit"/>
+						</Link>
+						<RaisedButton disabled={loading} secondary label="Delete" onClick={this.handleDelete}/>
+					</div>
 				</TableRowColumn>
 			</TableRow>
 		);

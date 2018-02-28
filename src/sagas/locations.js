@@ -1,15 +1,18 @@
 import {eventChannel} from 'redux-saga';
-import {call, all, put, takeLatest, take, fork} from 'redux-saga/effects';
+import {call, all, put, takeLatest, take, fork, select} from 'redux-saga/effects';
 import {List, fromJS} from 'immutable';
 import axios from 'axios';
 
+import {selectors as locationSelectors} from '../ducks/location';
 import {types as locationsTypes} from '../ducks/locations';
+import {types as appTypes} from '../ducks/app';
 import {types as metaTypes} from '../ducks/meta';
 
 export function * watchLocations() {
 	yield takeLatest(locationsTypes.LOCATIONS_GET, onLocationsGet);
 	yield takeLatest(locationsTypes.LOCATIONS_SAVE, onLocationsSave);
 	yield takeLatest(locationsTypes.LOCATIONS_CREATE, onLocationsCreate);
+	yield takeLatest(locationsTypes.LOCATIONS_DELETE, onLocationsDelete);
 	yield takeLatest(locationsTypes.LOCATIONS_IMPORT, onLocationsImport);
 	yield takeLatest(locationsTypes.LOCATIONS_RESPONSE, onLocationsRepsonse);
 }
@@ -48,6 +51,18 @@ export function * onLocationsCreate({payload}) {
 	return yield payload;
 }
 
+export function * onLocationsDelete({payload}) {
+	payload.method = 'delete';
+
+	if (payload.data.id) {
+		payload.route = `v1/user/location`;
+	} else {
+		payload.route = `v1/user/locations`;
+	}
+
+	return yield payload;
+}
+
 export function * onLocationsImport({payload}) {
 	payload.method = 'post';
 
@@ -62,8 +77,8 @@ export function * onLocationsImport({payload}) {
 	return yield payload;
 }
 
-export function * onLocationsRepsonse({response}) {
-	if (response && response.data && Array.isArray(response.data)) {
+export function * onLocationsRepsonse({response, payload}) {
+	if (payload.action === 'get' && response && response.data && Array.isArray(response.data)) {
 		return yield all([
 			put({
 				type: metaTypes.LOCATIONS_META_SET,
@@ -76,12 +91,48 @@ export function * onLocationsRepsonse({response}) {
 		]);
 	}
 
-	return yield all([
-		put({
-			type: locationsTypes.LOCATIONS_UPDATE,
-			payload: fromJS(response.data)
-		})
-	]);
+	if (response.data) {
+		return yield all([
+			put({
+				type: locationsTypes.LOCATIONS_UPDATE,
+				payload: fromJS(response.data)
+			})
+		]);
+	}
+
+	if (payload.action === 'delete') {
+		const query = yield select(locationSelectors.getQuery);
+
+		yield put({
+			type: appTypes.APP_REQUEST,
+			payload: {
+				dataset: 'locations',
+				action: 'get',
+				data: {
+					page: query.get('page')
+				}
+			}
+		});
+	}
+
+	if (payload.action === 'delete' && payload.data.id) {
+		return yield all([
+			put({
+				type: locationsTypes.LOCATIONS_REMOVE,
+				payload: fromJS({
+					_id: payload.data.id
+				})
+			})
+		]);
+	}
+
+	if (payload.action === 'delete' && !payload.data.id) {
+		return yield all([
+			put({
+				type: locationsTypes.LOCATIONS_RESET
+			})
+		]);
+	}
 }
 
 // Export function * LOCATIONS_REQUEST({payload}) {

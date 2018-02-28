@@ -14,11 +14,12 @@ export function requestTypes(base) {
 	const SAVE = 'SAVE';
 	const CREATE = 'CREATE';
 	const UPDATE = 'UPDATE';
+	const DELETE = 'DELETE';
 	const RESPONSE = 'RESPONSE';
 	const SUCCESS = 'SUCCESS';
 	const FAILURE = 'FAILURE';
 
-	return [GET, SAVE, CREATE, UPDATE, RESPONSE, REQUEST, SUCCESS, FAILURE].reduce((action, type) => {
+	return [GET, SAVE, CREATE, UPDATE, DELETE, RESPONSE, REQUEST, SUCCESS, FAILURE].reduce((action, type) => {
 		const baseType = `${base}_${type}`;
 
 		action[baseType] = baseType;

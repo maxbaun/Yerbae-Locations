@@ -25,6 +25,7 @@ export default class Locations extends Component {
 		meta: ImmutablePropTypes.map,
 		location: ImmutablePropTypes.map,
 		user: ImmutablePropTypes.map,
+		status: ImmutablePropTypes.map,
 		history: PropTypes.object.isRequired
 	};
 
@@ -34,7 +35,8 @@ export default class Locations extends Component {
 		locations: List(),
 		location: Map(),
 		meta: Map(),
-		user: Map()
+		user: Map(),
+		status: Map()
 	};
 
 	componentWillMount() {
@@ -76,11 +78,8 @@ export default class Locations extends Component {
 	}
 
 	render() {
-		const {data, locations, meta, actions} = this.props;
-		const locationMeta = meta.get('locations');
-
-		const prev = meta.getIn(['locations', 'prevKey']);
-		const next = meta.getIn(['locations', 'nextKey']);
+		const {locations, actions, status} = this.props;
+		const locationMeta = this.props.meta.get('locations');
 
 		return (
 			<div className={CSS.locations}>
@@ -104,6 +103,7 @@ export default class Locations extends Component {
 										key={location.get('_id')}
 										data={location}
 										actions={actions}
+										status={status}
 									/>
 								);
 							})}

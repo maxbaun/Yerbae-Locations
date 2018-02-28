@@ -6,7 +6,9 @@ import * as utils from '../utils/duckHelpers';
 export const types = {
 	...utils.requestTypes('LOCATIONS'),
 	LOCATIONS_SET: 'LOCATIONS_SET',
-	LOCATIONS_IMPORT: 'LOCATIONS_IMPORT'
+	LOCATIONS_IMPORT: 'LOCATIONS_IMPORT',
+	LOCATIONS_REMOVE: 'LOCATIONS_REMOVE',
+	LOCATIONS_RESET: 'LOCATIONS_RESET'
 };
 
 export const actions = {
@@ -32,6 +34,20 @@ export default (state = initialState, action) => {
 
 				return s.set(s.indexOf(node), fromJS(action.payload));
 			});
+
+		case types.LOCATIONS_REMOVE:
+			return state.update(s => {
+				const node = s.find(l => l.get('_id') === action.payload.get('_id'));
+
+				if (!node) {
+					return s;
+				}
+
+				return s.delete(s.indexOf(node));
+			});
+
+		case types.LOCATIONS_RESET:
+			return initialState;
 
 		default:
 			return state;
