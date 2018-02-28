@@ -73,8 +73,8 @@ class App extends Component {
 		const isLogged = isLoggedIn(user);
 
 		return (
-			<div id="app">
-				<MuiThemeProvider>
+			<MuiThemeProvider>
+				<div key="appWrapper" id="app">
 					{isLogged ?
 						<Header
 							actions={actions}
@@ -86,11 +86,11 @@ class App extends Component {
 							actions={actions}
 						/> : null
 					}
-					<BrowserRouter>
+					<div id="wrap">
 						{renderRoutes(routes, {...this.props})}
-					</BrowserRouter>
-				</MuiThemeProvider>
-			</div>
+					</div>
+				</div>
+			</MuiThemeProvider>
 		);
 	}
 }

@@ -3,6 +3,7 @@ import {push, goBack} from 'react-router-redux';
 import {supportsHistory} from 'history/DOMUtils';
 
 import {types, selectors as locationSelectors} from '../ducks/location';
+import {types as stateTypes, selectors as stateSelectors} from '../ducks/state';
 
 export function * watchLocation() {
 	yield takeLatest(types.LOCATION_PUSH, onPush);
@@ -35,8 +36,16 @@ export function * onLocationQuery({query}) {
 
 export function * onPush(action) {
 	const {pathname} = action.payload;
+	const menuOpen = yield select(stateSelectors.getOffmenu, 'menu');
 
-	return yield put(push(pathname));
+	if (menuOpen) {
+		yield put({
+			type: stateTypes.OFFMENU_TOGGLE,
+			name: 'menu'
+		});
+	}
+
+	return yield put(push({pathname}));
 }
 
 export function * onBack() {
