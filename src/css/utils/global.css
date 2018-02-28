@@ -9,8 +9,15 @@ body {
 	overflow: hidden;
 }
 
-#app {
-	height: 100vh;
-	overflow-x: hidden;
-	overflow-y: auto;
+:global {
+	#app {
+		height: 100vh;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+
+	#app.isLoggedIn {
+		height: calc(100vh - $headerHeight);
+		padding-top: $headerHeight;
+	}
 }

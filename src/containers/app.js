@@ -74,7 +74,7 @@ class App extends Component {
 
 		return (
 			<MuiThemeProvider>
-				<div key="appWrapper" id="app">
+				<div key="appWrapper" id="app" className={isLoggedIn ? 'isLoggedIn' : ''}>
 					{isLogged ?
 						<Header
 							actions={actions}

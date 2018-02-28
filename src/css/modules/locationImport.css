@@ -1,0 +1,14 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.locationImport {
+	display: block;
+}
+
+.importWrap {
+	@include pageWrap;
+	margin: 0 auto;
+	max-width: 400px;
+	padding-top: 5%;
+	padding-bottom: 5%;
+}

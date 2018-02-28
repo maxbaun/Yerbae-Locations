@@ -10,6 +10,7 @@ export function * watchLocations() {
 	yield takeLatest(locationsTypes.LOCATIONS_GET, onLocationsGet);
 	yield takeLatest(locationsTypes.LOCATIONS_SAVE, onLocationsSave);
 	yield takeLatest(locationsTypes.LOCATIONS_CREATE, onLocationsCreate);
+	yield takeLatest(locationsTypes.LOCATIONS_IMPORT, onLocationsImport);
 	yield takeLatest(locationsTypes.LOCATIONS_RESPONSE, onLocationsRepsonse);
 }
 
@@ -42,6 +43,20 @@ export function * onLocationsCreate({payload}) {
 
 	if (!payload.route) {
 		payload.route = `v1/user/location`;
+	}
+
+	return yield payload;
+}
+
+export function * onLocationsImport({payload}) {
+	payload.method = 'post';
+
+	if (payload.data.import) {
+		payload.data = JSON.parse(payload.data.import);
+	}
+
+	if (!payload.route) {
+		payload.route = `v1/user/locations`;
 	}
 
 	return yield payload;

@@ -5,7 +5,8 @@ import * as utils from '../utils/duckHelpers';
 
 export const types = {
 	...utils.requestTypes('LOCATIONS'),
-	LOCATIONS_SET: 'LOCATIONS_SET'
+	LOCATIONS_SET: 'LOCATIONS_SET',
+	LOCATIONS_IMPORT: 'LOCATIONS_IMPORT'
 };
 
 export const actions = {
