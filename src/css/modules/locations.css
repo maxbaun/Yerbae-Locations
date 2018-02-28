@@ -4,3 +4,12 @@
 .locations {
 	@include pageWrap;
 }
+
+.table {
+	margin-bottom: 1rem;
+}
+
+.pagination {
+	display: block;
+	text-align: center;
+}

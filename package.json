@@ -68,6 +68,7 @@
 		"lodash": "4.17.4",
 		"lodash-decorators": "^4.5.0",
 		"material-ui": "^0.20.0",
+		"material-ui-pagination": "^1.1.6",
 		"moment": "^2.19.2",
 		"prop-types": "^15.6.0",
 		"qhistory": "^1.0.0",

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import * as ImmutablePropTypes from 'react-immutable-proptypes';
 import {bind} from 'lodash-decorators';
 import {Map, List} from 'immutable';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
+import Pagination from 'material-ui-pagination';
 
 import {noop, unique, click, state, coordinates} from '../utils/componentHelpers';
 import {checkAuth} from '../utils/routeHelpers';
@@ -13,10 +14,6 @@ import LocationRow from './locationRow';
 export default class Locations extends Component {
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			import: ''
-		};
 
 		this.fetch = unique();
 	}
@@ -70,18 +67,7 @@ export default class Locations extends Component {
 	}
 
 	@bind()
-	handleGetCoords(location) {
-		this.props.actions.appRequest({
-			payload: {
-				dataset: 'coordinates',
-				data: location
-			},
-			fetch: this.fetch
-		});
-	}
-
-	@bind()
-	handlePageClick(page) {
+	handleUpdateData(page) {
 		this.props.actions.locationQuery({
 			query: {
 				page
@@ -89,69 +75,49 @@ export default class Locations extends Component {
 		});
 	}
 
-	@bind()
-	handleLogin() {
-		this.props.actions.authLogin();
-	}
-
-	@bind()
-	handleLocationSave(e) {
-		console.log(e.target.values);
-		e.preventDefault();
-	}
-
-	@bind()
-	handleChange(state) {
-		console.log(state);
-		return state ? this.setState(state) : null;
-	}
-
-	@bind()
-	handleImportSubmit(e) {
-		e.preventDefault();
-
-		this.props.actions.appRequest({
-			payload: {
-				dataset: 'locations',
-				action: 'create',
-				data: this.state.import
-			},
-			fetch: this.fetch
-		});
-	}
-
 	render() {
 		const {data, locations, meta, actions} = this.props;
+		const locationMeta = meta.get('locations');
 
 		const prev = meta.getIn(['locations', 'prevKey']);
 		const next = meta.getIn(['locations', 'nextKey']);
 
 		return (
 			<div className={CSS.locations}>
-				<Table selectable={false}>
-					<TableHeader displaySelectAll={false} enableSelectAll={false} adjustForCheckbox={false}>
-						<TableRow>
-							<TableHeaderColumn>Name</TableHeaderColumn>
-							<TableHeaderColumn>Address</TableHeaderColumn>
-							<TableHeaderColumn>City</TableHeaderColumn>
-							<TableHeaderColumn>State</TableHeaderColumn>
-							<TableHeaderColumn>Zip</TableHeaderColumn>
-							<TableHeaderColumn>Coordinates</TableHeaderColumn>
-							<TableHeaderColumn>Actions</TableHeaderColumn>
-						</TableRow>
-					</TableHeader>
-					<TableBody displayRowCheckbox={false}>
-						{locations.map(location => {
-							return (
-								<LocationRow
-									key={location.get('_id')}
-									data={location}
-									actions={actions}
-								/>
-							);
-						})}
-					</TableBody>
-				</Table>
+				<div className={CSS.table}>
+					<Table selectable={false}>
+						<TableHeader displaySelectAll={false} enableSelectAll={false} adjustForCheckbox={false}>
+							<TableRow>
+								<TableHeaderColumn>Name</TableHeaderColumn>
+								<TableHeaderColumn>Address</TableHeaderColumn>
+								<TableHeaderColumn>City</TableHeaderColumn>
+								<TableHeaderColumn>State</TableHeaderColumn>
+								<TableHeaderColumn>Zip</TableHeaderColumn>
+								<TableHeaderColumn>Coordinates</TableHeaderColumn>
+								<TableHeaderColumn>Actions</TableHeaderColumn>
+							</TableRow>
+						</TableHeader>
+						<TableBody displayRowCheckbox={false}>
+							{locations.map(location => {
+								return (
+									<LocationRow
+										key={location.get('_id')}
+										data={location}
+										actions={actions}
+									/>
+								);
+							})}
+						</TableBody>
+					</Table>
+				</div>
+				<div className={CSS.pagination}>
+					<Pagination
+						total={locationMeta.get('totalPages')}
+						display={10}
+						current={locationMeta.get('currentPage')}
+						onChange={this.handleUpdateData}
+					/>
+				</div>
 			</div>
 		);
 	}
