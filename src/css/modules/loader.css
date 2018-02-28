@@ -1,0 +1,29 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.loader {
+	height: 20px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.15s, visibility 0s 0.15s;
+	width: 50px;
+
+	&[data-position="center"] {
+		position: absolute;
+		left: 50%;
+		margin-left: -25px;
+		margin-top: -10px;
+		top: 50%;
+	}
+
+	svg {
+		transform: translate3d(0, -5px, 0)
+	}
+}
+
+.loaderActive {
+	composes: loader;
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.15s, visibility 0s;
+}

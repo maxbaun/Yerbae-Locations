@@ -4,6 +4,7 @@ import {createSelector} from 'reselect';
 import * as utils from '../utils/duckHelpers';
 
 export const types = {
+	...utils.requestTypes('AUTH'),
 	AUTH_LOGIN: 'AUTH_LOGIN',
 	AUTH_LOGOUT: 'AUTH_LOGOUT'
 };

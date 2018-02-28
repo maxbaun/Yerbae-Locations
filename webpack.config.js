@@ -94,7 +94,7 @@ let browserConfig = {
 						}
 					}
 				],
-				include: path.resolve(__dirname, '../app'),
+				include: path.resolve(__dirname, './src'),
 				exclude: /img/
 			},
 			{
@@ -107,7 +107,7 @@ let browserConfig = {
 						}
 					}
 				],
-				include: path.resolve(__dirname, '../app'),
+				include: path.resolve(__dirname, './src'),
 				exclude: /css/
 			}
 		]
@@ -123,7 +123,9 @@ let browserConfig = {
 			FIREBASE_PROJECT_ID: JSON.stringify((isDev ? 'yerbae-1510722307750' : '')),
 			FIREBASE_STORAGE_BUCKET: JSON.stringify((isDev ? 'yerbae-1510722307750.appspot.com' : '')),
 			FIREBASE_MESSAGING_SENDER_ID: JSON.stringify((isDev ? '425317889074' : '')),
-			GOOGLE_MAPS_KEY: JSON.stringify((isDev ? 'AIzaSyD_k1bjJAQM7FFvuiS7SPgjQWQ4LhZAvrw' : 'AIzaSyD_k1bjJAQM7FFvuiS7SPgjQWQ4LhZAvrw'))
+			GOOGLE_MAPS_KEY: JSON.stringify((isDev ? 'AIzaSyD_k1bjJAQM7FFvuiS7SPgjQWQ4LhZAvrw' : 'AIzaSyD_k1bjJAQM7FFvuiS7SPgjQWQ4LhZAvrw')),
+			API_URL: JSON.stringify((isDev ? 'http://yerbae.info:8001/' : '')),
+			COOKIE_DOMAIN: JSON.stringify((isDev ? null : '.yerbae.com'))
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',

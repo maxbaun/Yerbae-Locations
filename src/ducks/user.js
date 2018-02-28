@@ -2,6 +2,7 @@ import {fromJS, Map} from 'immutable';
 import {createSelector} from 'reselect';
 
 import * as utils from '../utils/duckHelpers';
+import {tokenParse} from '../services/token';
 
 export const types = {
 	USER_SET: 'USER_SET',
@@ -12,7 +13,7 @@ export const actions = {
 	userSet: obj => utils.action(types.USER_SET, obj)
 };
 
-const initialState = Map();
+const initialState = tokenParse() || Map();
 
 export default (state = initialState, action) => {
 	switch (action.type) {
@@ -20,7 +21,7 @@ export default (state = initialState, action) => {
 			return fromJS(action.payload);
 
 		case types.USER_UNSET:
-			return initialState;
+			return Map();
 
 		default:
 			return state;

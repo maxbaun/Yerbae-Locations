@@ -10,10 +10,15 @@ export function action(type, payload = {}) {
 
 export function requestTypes(base) {
 	const REQUEST = 'REQUEST';
+	const GET = 'GET';
+	const SAVE = 'SAVE';
+	const CREATE = 'CREATE';
+	const UPDATE = 'UPDATE';
+	const RESPONSE = 'RESPONSE';
 	const SUCCESS = 'SUCCESS';
 	const FAILURE = 'FAILURE';
 
-	return [REQUEST, SUCCESS, FAILURE].reduce((action, type) => {
+	return [GET, SAVE, CREATE, UPDATE, RESPONSE, REQUEST, SUCCESS, FAILURE].reduce((action, type) => {
 		const baseType = `${base}_${type}`;
 
 		action[baseType] = baseType;

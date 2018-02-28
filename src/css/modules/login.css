@@ -1,0 +1,27 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.login {
+	@include pageWrap;
+	margin: 0 auto;
+	max-width: 400px;
+	padding-top: 5%;
+	padding-bottom: 5%;
+}
+
+.logo {
+	@include imageWrap;
+	margin-bottom: 2rem;
+}
+
+.form {
+	@include noList;
+
+	li {
+		margin-bottom: 1rem;
+
+		&:last-child {
+			margin-top: 2rem;
+		}
+	}
+}

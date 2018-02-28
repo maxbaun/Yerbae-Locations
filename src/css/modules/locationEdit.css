@@ -1,0 +1,6 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.locationEdit {
+	display: block;
+}

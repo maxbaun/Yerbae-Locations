@@ -1,0 +1,22 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.location {
+	@include pageWrap;
+	margin: 0 auto;
+	max-width: 400px;
+	padding-top: 5%;
+	padding-bottom: 5%;
+}
+
+.form {
+	@include noList;
+
+	li {
+		margin-bottom: 0.5rem;
+
+		&:last-child {
+			margin-top: 1rem;
+		}
+	}
+}

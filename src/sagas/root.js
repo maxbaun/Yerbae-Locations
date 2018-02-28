@@ -5,6 +5,7 @@ import {watchApp} from './app';
 import {watchData} from './data';
 import {watchLocations} from './locations';
 import {watchAuth} from './auth';
+import {watchState} from './state';
 
 export default function * Sagas() {
 	yield all([
@@ -12,6 +13,7 @@ export default function * Sagas() {
 		fork(watchLocation),
 		fork(watchData),
 		fork(watchLocations),
-		fork(watchAuth)
+		fork(watchAuth),
+		fork(watchState)
 	]);
 }

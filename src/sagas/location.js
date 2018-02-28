@@ -34,12 +34,9 @@ export function * onLocationQuery({query}) {
 }
 
 export function * onPush(action) {
-	const {pathname, state} = action.payload;
+	const {pathname} = action.payload;
 
-	return yield put(push({
-		pathname,
-		state
-	}));
+	return yield put(push(pathname));
 }
 
 export function * onBack() {

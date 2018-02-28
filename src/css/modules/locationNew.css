@@ -1,0 +1,6 @@
+@import '../utils/variables.css';
+@import '../utils/mixins.css';
+
+.locationNew {
+	display: block;
+}

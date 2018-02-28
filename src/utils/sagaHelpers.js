@@ -1,12 +1,26 @@
-export function sagaResponse(dataset) {
-	return require(`../sagas/${dataset}`)[`${dataset.toUpperCase()}_RESPONSE`];
+export function sagaAction(payload, data) {
+	const {action, dataset} = payload;
+
+	return {
+		type: `${dataset.toUpperCase()}_${action.toUpperCase()}`,
+		...data
+	};
 }
 
-export function sagaRequest(dataset) {
-	return require(`../sagas/${dataset}`)[`${dataset.toUpperCase()}_REQUEST`];
+export function sagaResponse(payload, data) {
+	const {dataset} = payload;
+
+	return {
+		type: `${dataset.toUpperCase()}_RESPONSE`,
+		...data
+	};
 }
 
-export function sagaFailure(dataset) {
-	const func = require(`../sagas/${dataset}`)[`${dataset.toUpperCase()}_FAILURE`];
-	return func ? func : () => {};
+export function sagaFailure(payload, data) {
+	const {dataset} = payload;
+
+	return {
+		type: `${dataset.toUpperCase()}_FAILURE`,
+		...data
+	};
 }

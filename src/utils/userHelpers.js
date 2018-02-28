@@ -1,5 +1,5 @@
 export function isLoggedIn(user) {
-	return user ? Boolean(user.get('uid')) : false;
+	return user ? Boolean(user.get('_id')) : false;
 }
 
 export function isLoggedOut(user) {

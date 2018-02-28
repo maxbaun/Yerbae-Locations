@@ -1,58 +1,53 @@
-import {eventChannel} from 'redux-saga';
-import {takeEvery, fork, call, put, take} from 'redux-saga/effects';
+import {takeEvery, takeLatest, call, put} from 'redux-saga/effects';
 
 import {types as authTypes} from '../ducks/auth';
 import {types as userTypes} from '../ducks/user';
-import firebase, {auth} from '../services/firebase';
-
-const AuthProvider = new firebase.auth.GoogleAuthProvider();
+import {tokenSet, tokenParse, tokenRemove} from '../services/token';
+import {onReload, onNewLocation} from '../sagas/location';
 
 export function * watchAuth() {
 	yield takeEvery(authTypes.AUTH_LOGIN, onLogin);
 	yield takeEvery(authTypes.AUTH_LOGOUT, onLogout);
-	yield fork(onAuthState);
+	yield takeLatest(authTypes.AUTH_RESPONSE, onResponse);
 }
 
-function * onLogin() {
-	return yield call(login);
+function * onLogin({payload}) {
+	payload.method = 'put';
+
+	if (!payload.route) {
+		payload.route = 'v1/public/auth';
+	}
+
+	return yield payload;
 }
 
 function * onLogout() {
-	return yield call(logout);
+	yield call(tokenRemove, 'user');
+
+	yield put({
+		type: userTypes.USER_UNSET
+	});
+
+	return yield call(onNewLocation, `/`);
 }
 
-async function login() {
-	return auth.signInWithPopup(AuthProvider);
-}
+function * onResponse({response, payload}) {
+	if (response && response.data && response.data.token) {
+		const reload = payload && typeof payload.reload !== 'undefined' ? payload.reload : true;
 
-async function logout() {
-	return auth.signOut();
-}
+		yield call(tokenSet, response.data.token);
 
-function * onAuthState() {
-	const channel = yield call(authChannel);
+		const token = yield call(tokenParse);
 
-	while (true) {
-		const {user} = yield take(channel);
+		yield put({
+			type: userTypes.USER_SET,
+			payload: token
+		});
 
-		if (user) {
-			yield put({
-				type: userTypes.USER_SET,
-				payload: user.toJSON()
-			});
-		} else {
-			yield put({
-				type: userTypes.USER_UNSET
-			});
+		if (reload) {
+			return yield call(onReload);
 		}
 	}
-}
 
-function authChannel() {
-	return eventChannel(emit => {
-		return firebase.auth().onAuthStateChanged(
-			user => emit({user}),
-			error => emit({error})
-		);
-	});
+	return yield response;
 }

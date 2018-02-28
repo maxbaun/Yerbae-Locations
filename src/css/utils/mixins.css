@@ -1,0 +1,47 @@
+@import './variables.css';
+
+$xs     : 576px;
+$sm     : 768px;
+$md     : 992px;
+$sm-max : 991px;
+$lg     : 1200px;
+$xs-max : 767px;
+$md-max : 1199px;
+
+@custom-media --mobile(max-width: $xs-max);
+@custom-media --collapseDown (max-width: $sm-max);
+
+@custom-media --smallUp (min-width: $xs);
+@custom-media --tabletUp (min-width: $sm);
+@custom-media --desktopUp (min-width: $md);
+
+@mixin fontSize($sizeValue: 1.6, $line: $sizeValue * 1.5) {
+	font-size: calc($sizeValue * 1px) !important;
+	line-height: calc($line * 1px) !important;
+	font-size: calc(calc($line / 10) * 1rem) !imporant; /* stylelint-disable */
+	line-height: calc(calc($line / 10) * 1rem) !imporant;
+}
+
+@mixin pageWrap {
+	padding: 0 15px;
+}
+
+@mixin imageWrap {
+	img {
+		height: auto;
+		max-width: 100%;
+	}
+}
+
+@mixin noLink {
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+@mixin noList {
+	list-style: none;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}

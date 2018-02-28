@@ -55,7 +55,7 @@ export function escape(func) {
 }
 
 export function state(func, key) {
-	return e => (func && typeof func === 'function') ? func({[key]: e}) : null;
+	return e => (func && typeof func === 'function') ? func({[key]: e.target.value}) : null;
 }
 
 export function input(func, val) {
@@ -200,4 +200,8 @@ export function price(price) {
 
 export function stripHtml(string) {
 	return string.replace(/<\/?[^>]+(>|$)/g, '');
+}
+
+export function coordinates(location) {
+	return `Lng: ${location.getIn(['geometry', 'coordinates', 0])} // Lat: ${location.getIn(['geometry', 'coordinates', 1])}`;
 }

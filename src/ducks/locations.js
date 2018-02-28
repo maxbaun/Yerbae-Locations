@@ -5,14 +5,13 @@ import * as utils from '../utils/duckHelpers';
 
 export const types = {
 	...utils.requestTypes('LOCATIONS'),
-	LOCATIONS_SET: 'LOCATIONS_SET',
-	LOCATIONS_SAVE: 'LOCATIONS_SAVE',
-	LOCATIONS_UPDATE: 'LOCATIONS_UPDATE'
+	LOCATIONS_SET: 'LOCATIONS_SET'
 };
 
 export const actions = {
 	locationsSet: obj => utils.action(types.LOCATIONS_SET, obj),
-	locationsSave: obj => utils.action(types.LOCATIONS_SAVE, obj)
+	locationsSave: obj => utils.action(types.LOCATIONS_SAVE, obj),
+	locationsCreate: obj => utils.action(types.LOCATIONS_CREATE, obj)
 };
 
 const initialState = fromJS([]);
@@ -24,7 +23,7 @@ export default (state = initialState, action) => {
 
 		case types.LOCATIONS_UPDATE:
 			return state.update(s => {
-				const node = s.find(l => l.get('key') === action.payload.get('key'));
+				const node = s.find(l => l.get('_id') === action.payload.get('_id'));
 
 				if (!node) {
 					return s;
