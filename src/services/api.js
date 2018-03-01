@@ -35,18 +35,27 @@ function parseUrl(route) {
 
 async function makeApiCallInBatches(request) {
 	let tempArray = [];
-	const chunk = 1;
+	const chunk = 50;
 
 	for (let i = 0; i < request.data.length; i += chunk) {
 		tempArray.push(request.data.slice(i, i + chunk));
 	}
 
+	let data = [];
+
 	await asyncForEach(tempArray, async data => {
-		await makeApiCall({
+		let res = await makeApiCall({
 			...request,
 			data
 		});
+
+		data.push(res.data);
 	});
+
+	return {
+		success: true,
+		data
+	};
 }
 
 async function asyncForEach(array, callback) {
