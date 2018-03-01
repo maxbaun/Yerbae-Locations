@@ -71,7 +71,7 @@ export function * onLocationsImport({payload}) {
 	}
 
 	if (!payload.route) {
-		payload.route = `v1/user/location`;
+		payload.route = `v1/user/locations`;
 	}
 
 	return yield payload;

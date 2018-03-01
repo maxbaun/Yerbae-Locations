@@ -34,14 +34,14 @@ function parseUrl(route) {
 }
 
 async function makeApiCallInBatches(request) {
-	// let tempArray = [];
-	// const chunk = 25;
-	//
-	// for (let i = 0; i < request.data.length; i += chunk) {
-	// 	tempArray.push(request.data.slice(i, i + chunk));
-	// }
+	let tempArray = [];
+	const chunk = 50;
 
-	await asyncForEach(request.data, async data => {
+	for (let i = 0; i < request.data.length; i += chunk) {
+		tempArray.push(request.data.slice(i, i + chunk));
+	}
+
+	await asyncForEach(tempArray, async data => {
 		await makeApiCall({
 			...request,
 			data
