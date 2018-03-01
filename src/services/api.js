@@ -35,7 +35,7 @@ function parseUrl(route) {
 
 async function makeApiCallInBatches(request) {
 	let tempArray = [];
-	const chunk = 50;
+	const chunk = 1;
 
 	for (let i = 0; i < request.data.length; i += chunk) {
 		tempArray.push(request.data.slice(i, i + chunk));
