@@ -20,7 +20,7 @@ export default function ({method, data, route}) {
 		request.headers.Authorization = token;
 	}
 
-	if (request.data.length > 50) {
+	if (Array.isArray(request.data)) {
 		return makeApiCallInBatches(request);
 	}
 
@@ -34,14 +34,14 @@ function parseUrl(route) {
 }
 
 async function makeApiCallInBatches(request) {
-	let tempArray = [];
-	const chunk = 50;
+	// let tempArray = [];
+	// const chunk = 25;
+	//
+	// for (let i = 0; i < request.data.length; i += chunk) {
+	// 	tempArray.push(request.data.slice(i, i + chunk));
+	// }
 
-	for (let i = 0; i < request.data.length; i += chunk) {
-		tempArray.push(request.data.slice(i, i + chunk));
-	}
-
-	await asyncForEach(tempArray, async data => {
+	await asyncForEach(request.data, async data => {
 		await makeApiCall({
 			...request,
 			data
