@@ -65,12 +65,14 @@ async function asyncForEach(array, callback) {
 }
 
 async function makeApiCall(request) {
-	if (request.data) {
-		request.data = JSON.stringify(request.data);
+	const data = Object.assign({}, request.data);
+
+	if (data) {
+		request.data = JSON.stringify(data);
 	}
 
 	if (request.method === 'get') {
-		request.params = request.data;
+		request.params = data;
 	}
 
 	return axios(request)
