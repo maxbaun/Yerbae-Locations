@@ -29,8 +29,7 @@ export default [
 		component: LocationImport
 	},
 	{
-		path: '/locations/:locationId/',
-		exact: true,
+		path: '/locations/:locationId',
 		component: LocationEdit
 	},
 	{

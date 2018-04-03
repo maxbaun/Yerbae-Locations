@@ -4,6 +4,7 @@ import {List, fromJS} from 'immutable';
 import axios from 'axios';
 
 import {selectors as locationSelectors} from '../ducks/location';
+import {onNewLocation} from './location';
 import {types as locationsTypes} from '../ducks/locations';
 import {types as appTypes} from '../ducks/app';
 import {types as metaTypes} from '../ducks/meta';
@@ -89,6 +90,10 @@ export function * onLocationsRepsonse({response, payload}) {
 				payload: response.data
 			})
 		]);
+	}
+
+	if (payload.action === 'create' && response) {
+		return yield call(onNewLocation, '/locations');
 	}
 
 	if (response.data) {

@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {Link, BrowserRouter, Route} from 'react-router-dom';
 import {renderRoutes} from 'react-router-config';
 import {Switch} from 'react-router-dom';
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
 import {bind} from 'lodash-decorators';
 
 import {actions as locationActions, selectors as locationSelectors} from '../ducks/location';
@@ -59,18 +59,28 @@ class App extends Component {
 		actions: PropTypes.objectOf(PropTypes.func).isRequired,
 		data: ImmutablePropTypes.map,
 		user: ImmutablePropTypes.map,
-		state: ImmutablePropTypes.map
+		state: ImmutablePropTypes.map,
+		status: ImmutablePropTypes.map,
+		location: ImmutablePropTypes.map,
+		meta: ImmutablePropTypes.map,
+		locations: ImmutablePropTypes.list
 	};
 
 	static defaultProps = {
 		data: Map(),
 		user: Map(),
-		state: Map()
+		state: Map(),
+		status: Map(),
+		location: Map(),
+		meta: Map(),
+		locations: List()
 	};
 
 	render() {
-		const {user, actions, state} = this.props;
+		const {user, actions, state, status, location, locations, meta} = this.props;
 		const isLogged = isLoggedIn(user);
+
+		const props = {user, actions, state, status, locations, location, meta};
 
 		return (
 			<MuiThemeProvider>
@@ -87,7 +97,9 @@ class App extends Component {
 						/> : null
 					}
 					<div id="wrap">
-						{renderRoutes(routes, {...this.props})}
+						<Switch location={this.props.location.toJS()}>
+							{renderRoutes(routes, {...props})}
+						</Switch>
 					</div>
 				</div>
 			</MuiThemeProvider>
