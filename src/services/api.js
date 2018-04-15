@@ -65,7 +65,13 @@ async function asyncForEach(array, callback) {
 }
 
 async function makeApiCall(request) {
-	const data = Object.assign({}, request.data);
+	let data;
+
+	if (Array.isArray(request.data)) {
+		data = [...request.data];
+	} else {
+		data = Object.assign({}, request.data);
+	}
 
 	if (data) {
 		request.data = JSON.stringify(data);

@@ -96,6 +96,10 @@ export function * onLocationsRepsonse({response, payload}) {
 		return yield call(onNewLocation, '/locations');
 	}
 
+	if (payload.action === 'import' && response) {
+		return yield call(onNewLocation, '/locations');
+	}
+
 	if (response.data) {
 		return yield all([
 			put({
