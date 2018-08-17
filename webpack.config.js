@@ -117,7 +117,7 @@ let browserConfig = {
 			'process.env': {
 				NODE_ENV: isDev ? JSON.stringify('development') : JSON.stringify('production')
 			},
-			API_URL: JSON.stringify((isDev ? 'http://yerbae.info:8001/' : 'https://yerbae-api.herokuapp.com/')),
+			API_URL: JSON.stringify((isDev ? 'http://yerbae.info:8001/' : 'https://yerbae.now.sh/')),
 			COOKIE_DOMAIN: JSON.stringify((isDev ? null : '.unruffled-knuth-d84de2.netlify.com'))
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
