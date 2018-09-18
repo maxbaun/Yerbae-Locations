@@ -8,10 +8,12 @@ export const types = {
 	LOCATIONS_SET: 'LOCATIONS_SET',
 	LOCATIONS_IMPORT: 'LOCATIONS_IMPORT',
 	LOCATIONS_REMOVE: 'LOCATIONS_REMOVE',
-	LOCATIONS_RESET: 'LOCATIONS_RESET'
+	LOCATIONS_RESET: 'LOCATIONS_RESET',
+	LOCATIONS_EXPORT: 'LOCATIONS_EXPORT'
 };
 
 export const actions = {
+	locationsExport: obj => utils.action(types.LOCATIONS_EXPORT, obj),
 	locationsSet: obj => utils.action(types.LOCATIONS_SET, obj),
 	locationsSave: obj => utils.action(types.LOCATIONS_SAVE, obj),
 	locationsCreate: obj => utils.action(types.LOCATIONS_CREATE, obj)

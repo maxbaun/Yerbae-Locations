@@ -3,6 +3,7 @@ import Locations from './components/locations';
 import LocationNew from './components/locationNew';
 import LocationEdit from './components/locationEdit';
 import LocationImport from './components/locationImport';
+import LocationExport from './components/locationExport';
 import Login from './components/login';
 import About from './components/about';
 import NotFound from './components/404';
@@ -27,6 +28,11 @@ export default [
 		path: '/locations/import',
 		exact: true,
 		component: LocationImport
+	},
+	{
+		path: '/locations/export',
+		exact: true,
+		component: LocationExport
 	},
 	{
 		path: '/locations/:locationId',

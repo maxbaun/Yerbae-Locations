@@ -1,5 +1,13 @@
 import {eventChannel} from 'redux-saga';
-import {call, all, put, takeLatest, take, fork, select} from 'redux-saga/effects';
+import {
+	call,
+	all,
+	put,
+	takeLatest,
+	take,
+	fork,
+	select
+} from 'redux-saga/effects';
 import {List, fromJS} from 'immutable';
 import axios from 'axios';
 
@@ -8,6 +16,7 @@ import {onNewLocation} from './location';
 import {types as locationsTypes} from '../ducks/locations';
 import {types as appTypes} from '../ducks/app';
 import {types as metaTypes} from '../ducks/meta';
+import {types as fileTypes} from '../ducks/files';
 
 export function * watchLocations() {
 	yield takeLatest(locationsTypes.LOCATIONS_GET, onLocationsGet);
@@ -16,6 +25,7 @@ export function * watchLocations() {
 	yield takeLatest(locationsTypes.LOCATIONS_DELETE, onLocationsDelete);
 	yield takeLatest(locationsTypes.LOCATIONS_IMPORT, onLocationsImport);
 	yield takeLatest(locationsTypes.LOCATIONS_RESPONSE, onLocationsRepsonse);
+	yield takeLatest(locationsTypes.LOCATIONS_EXPORT, onLocationsExport);
 }
 
 export function * onLocationsGet({payload}) {
@@ -79,7 +89,12 @@ export function * onLocationsImport({payload}) {
 }
 
 export function * onLocationsRepsonse({response, payload}) {
-	if (payload.action === 'get' && response && response.data && Array.isArray(response.data)) {
+	if (
+		payload.action === 'get' &&
+		response &&
+		response.data &&
+		Array.isArray(response.data)
+	) {
 		return yield all([
 			put({
 				type: metaTypes.LOCATIONS_META_SET,
@@ -98,6 +113,15 @@ export function * onLocationsRepsonse({response, payload}) {
 
 	if (payload.action === 'import' && response) {
 		return yield call(onNewLocation, '/locations');
+	}
+
+	if (payload.action === 'export' && response && response.data) {
+		return yield all([
+			put({
+				type: fileTypes.EXPORT_SET,
+				payload: response.data.file
+			})
+		]);
 	}
 
 	if (response.data) {
@@ -142,6 +166,16 @@ export function * onLocationsRepsonse({response, payload}) {
 			})
 		]);
 	}
+}
+
+export function * onLocationsExport({payload}) {
+	payload.method = 'get';
+
+	if (!payload.route) {
+		payload.route = 'v1/user/locations/export';
+	}
+
+	return yield payload;
 }
 
 // Export function * LOCATIONS_REQUEST({payload}) {

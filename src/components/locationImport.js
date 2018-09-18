@@ -6,7 +6,12 @@ import {Card, CardActions, CardText} from 'material-ui/Card';
 import {TextField, Subheader, RaisedButton} from 'material-ui';
 import {bind} from 'lodash-decorators';
 
-import {state, isLoading, unique, clickPrevent} from '../utils/componentHelpers';
+import {
+	state,
+	isLoading,
+	unique,
+	clickPrevent
+} from '../utils/componentHelpers';
 import Loader from './loader';
 import CSS from '../css/modules/locationImport.css';
 
@@ -71,10 +76,22 @@ export default class LocationImport extends Component {
 								/>
 							</CardText>
 							<Subheader>
-								To convert CSV to JSON, <a href="https://hreftools.com/csv-to-json" rel="noopener noreferrer" target="_blank">please click here.</a>
+								To convert CSV to JSON,{' '}
+								<a
+									href="https://hreftools.com/csv-to-json"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									please click here.
+								</a>
 							</Subheader>
 							<CardActions>
-								<RaisedButton primary disabled={loading} type="submit" label={loading ? null : 'Save'}>
+								<RaisedButton
+									primary
+									disabled={loading}
+									type="submit"
+									label={loading ? null : 'Save'}
+								>
 									<Loader active={loading} position="center"/>
 								</RaisedButton>
 							</CardActions>

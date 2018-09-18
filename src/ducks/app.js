@@ -7,6 +7,7 @@ import data from './data';
 import locations from './locations';
 import meta from './meta';
 import user from './user';
+import files from './files';
 
 export const types = {
 	...utils.requestTypes('APP'),
@@ -29,7 +30,8 @@ function status(state = initialState, action) {
 		case types.APP_REQUEST:
 			if (action.fetch && state.has(action.fetch)) {
 				return state.update(action.fetch, s => {
-					return s.set('request', fromJS(action.payload))
+					return s
+						.set('request', fromJS(action.payload))
 						.set('loading', true)
 						.delete('success')
 						.delete('error');
@@ -37,34 +39,42 @@ function status(state = initialState, action) {
 			}
 
 			if (action.fetch && !state.has(action.fetch)) {
-				return state.set(action.fetch, fromJS({
-					request: action.payload,
-					loading: true
-				}));
+				return state.set(
+					action.fetch,
+					fromJS({
+						request: action.payload,
+						loading: true
+					})
+				);
 			}
 
 			return state;
 
 		case types.APP_SUCCESS:
 			if (action.fetch) {
-				return state.update(action.fetch, s => s.set('success', fromJS(action.payload)).set('loading', false));
+				return state.update(action.fetch, s =>
+					s.set('success', fromJS(action.payload)).set('loading', false));
 			}
 
 			return state;
 
 		case types.APP_FAILURE:
 			if (action.fetch) {
-				return state.update(action.fetch, s => s.set('error', fromJS(action.payload)).set('loading', false));
+				return state.update(action.fetch, s =>
+					s.set('error', fromJS(action.payload)).set('loading', false));
 			}
 
 			return state;
 
 		case types.APP_RESET:
 			if (state.has(action.fetch)) {
-				return state.set(action.fetch, fromJS({
-					request: null,
-					loading: false
-				}));
+				return state.set(
+					action.fetch,
+					fromJS({
+						request: null,
+						loading: false
+					})
+				);
 			}
 
 			return state;
@@ -79,7 +89,8 @@ export default combineReducers({
 	data,
 	locations,
 	meta,
-	user
+	user,
+	files
 });
 
 const getStatus = state => state.getIn(['app', 'status']);

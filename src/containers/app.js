@@ -9,17 +9,30 @@ import {Switch} from 'react-router-dom';
 import {Map, List} from 'immutable';
 import {bind} from 'lodash-decorators';
 
-import {actions as locationActions, selectors as locationSelectors} from '../ducks/location';
-import {actions as storeActions, selectors as storeSelectors} from '../ducks/app';
-import {actions as dataActions, selectors as dataSelectors} from '../ducks/data';
+import {
+	actions as locationActions,
+	selectors as locationSelectors
+} from '../ducks/location';
+import {
+	actions as storeActions,
+	selectors as storeSelectors
+} from '../ducks/app';
+import {
+	actions as dataActions,
+	selectors as dataSelectors
+} from '../ducks/data';
 import {actions as authActions} from '../ducks/auth';
 import {selectors as locationsSelectors} from '../ducks/locations';
-import {actions as stateActions, selectors as stateSelectors} from '../ducks/state';
+import {
+	actions as stateActions,
+	selectors as stateSelectors
+} from '../ducks/state';
 import {selectors as userSelectors} from '../ducks/user';
 import {selectors as metaSelectors} from '../ducks/meta';
+import {selectors as fileSelectors} from '../ducks/files';
 import {MuiThemeProvider} from 'material-ui/styles';
 
-import {unique, click} from '../utils/componentHelpers';
+import {unique} from '../utils/componentHelpers';
 import {isLoggedIn} from '../utils/userHelpers';
 import Header from '../components/header';
 import Menu from '../components/menu';
@@ -35,17 +48,21 @@ const mapStateToProps = state => ({
 	locations: locationsSelectors.getLocations(state),
 	meta: metaSelectors.getMeta(state),
 	user: userSelectors.getUser(state),
-	state: stateSelectors.getState(state)
+	state: stateSelectors.getState(state),
+	files: fileSelectors.getFiles(state)
 });
 
 const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators({
-		...locationActions,
-		...storeActions,
-		...dataActions,
-		...authActions,
-		...stateActions
-	}, dispatch)
+	actions: bindActionCreators(
+		{
+			...locationActions,
+			...storeActions,
+			...dataActions,
+			...authActions,
+			...stateActions
+		},
+		dispatch
+	)
 });
 
 class App extends Component {
@@ -63,6 +80,7 @@ class App extends Component {
 		status: ImmutablePropTypes.map,
 		location: ImmutablePropTypes.map,
 		meta: ImmutablePropTypes.map,
+		files: ImmutablePropTypes.map,
 		locations: ImmutablePropTypes.list
 	};
 
@@ -73,29 +91,45 @@ class App extends Component {
 		status: Map(),
 		location: Map(),
 		meta: Map(),
+		files: Map(),
 		locations: List()
 	};
 
 	render() {
-		const {user, actions, state, status, location, locations, meta} = this.props;
+		const {
+			user,
+			actions,
+			state,
+			status,
+			location,
+			locations,
+			meta,
+			files
+		} = this.props;
 		const isLogged = isLoggedIn(user);
 
-		const props = {user, actions, state, status, locations, location, meta};
+		const props = {
+			user,
+			actions,
+			state,
+			status,
+			locations,
+			location,
+			meta,
+			files
+		};
 
 		return (
 			<MuiThemeProvider>
-				<div key="appWrapper" id="app" className={isLoggedIn ? 'isLoggedIn' : ''}>
-					{isLogged ?
-						<Header
-							actions={actions}
-						/> : null
-					}
-					{isLogged ?
-						<Menu
-							active={state.getIn(['offmenu', 'menu'])}
-							actions={actions}
-						/> : null
-					}
+				<div
+					key="appWrapper"
+					id="app"
+					className={isLoggedIn ? 'isLoggedIn' : ''}
+				>
+					{isLogged ? <Header actions={actions}/> : null}
+					{isLogged ? (
+						<Menu active={state.getIn(['offmenu', 'menu'])} actions={actions}/>
+					) : null}
 					<div id="wrap">
 						<Switch location={this.props.location.toJS()}>
 							{renderRoutes(routes, {...props})}
@@ -107,4 +141,7 @@ class App extends Component {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(App);
