@@ -4,6 +4,7 @@ import * as ImmutablePropTypes from 'react-immutable-proptypes';
 import {Map} from 'immutable';
 
 import {isLoading, unique} from '../utils/componentHelpers';
+import {checkAuth} from '../utils/routeHelpers';
 import Loader from './loader';
 import CSS from '../css/modules/locationExport.css';
 
@@ -16,6 +17,7 @@ export default class LocationExport extends Component {
 
 	static propTypes = {
 		actions: PropTypes.objectOf(PropTypes.func).isRequired,
+		history: PropTypes.object.isRequired,
 		status: PropTypes.object.isRequired,
 		files: ImmutablePropTypes.map
 	};
@@ -23,6 +25,10 @@ export default class LocationExport extends Component {
 	static defaultProps = {
 		files: Map()
 	};
+
+	componentWillMount() {
+		checkAuth(this.props.history);
+	}
 
 	componentDidMount() {
 		this.props.actions.appRequest({
